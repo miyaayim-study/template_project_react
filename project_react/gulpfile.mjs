@@ -5,13 +5,32 @@ import gulpSass from "gulp-sass"; // gulp-sassパッケージのgulp-sassモジ�
 import sassCompiler from "sass"; // sassパッケージに含まれるSassコンパイラ本体のsassモジュールをインポートする
 const sass = gulpSass(sassCompiler); // gulp-sassのコンストラクタ関数にsassコンパイラを渡して、コンパイラを使用するための定数sassを定義
 
+// postcss関連
+import postcss from 'gulp-postcss'; // gulp-postcssパッケージをインポートする
+import autoprefixer from 'autoprefixer'; // Autoprefixer（ベンダープレフィックス自動付与）のパッケージをインポートする
+import stylelint from 'stylelint'; // stylelint（CSS構文チェック）パッケージをインポートする
+import postcssReporter from 'postcss-reporter'; // postcss-reporterパッケージをインポートする
+
+
 const compileSass = (done) => { // "compileSass"というgulpタスクを定義、 (done)はラストのdone()でタスク完了の合図を受け取るためのもの
+
   gulp.src("src/sass/style.scss") // コンパイルするSassファイルを指定
+
     .pipe(
       sass({ // 定数sassを実行
         outputStyle: "expanded" // 出力されるCSSの書式を"expanded"（展開形式）に設定する
       })
     )
+
+    .pipe(postcss([autoprefixer()])) // autoprefixerでベンダープレフィックス付与
+    .pipe(postcss([
+      stylelint({ // stylelintで構文チェック
+        configFile: ".stylelintrc.js", // .stylelintrc.jsファイルを参照
+        fix: true, // 生成するファイルのプロパティ順序を自動修正する
+      }),
+      postcssReporter({clearMessages: true}) // エラーメッセージ表示
+    ]))
+    
     .pipe(gulp.dest("./dist")) // 出力先ディレクトリを指定
     done(); //done()でタスク完了の信号を出す
 };
@@ -37,13 +56,13 @@ export { bundleWebpack };
 import browserSync from 'browser-sync'; // browser-syncのプラグインの読み込み
 
 // リロード設定
-const browserReload = (done) => { // "browserReload"というgulpタスクを定義 (done)はラストのdone()でタスク完了の合図を受け取るためのもの
+const browserReload = (done) => { // "browserReload"というgulpタスクを定義、 (done)はラストのdone()でタスク完了の合図を受け取るためのもの
   browserSync.reload(); // 同期しているブラウザをリロード
   done(); //done()でタスク完了の信号を出す
 };
 
 // Browsersync起動して監視
-const watchFiles = (done) => { // "watchFiles"というgulpタスクを定義 (done)はラストのdone()でタスク完了の合図を受け取るためのもの
+const watchFiles = (done) => { // "watchFiles"というgulpタスクを定義、 (done)はラストのdone()でタスク完了の合図を受け取るためのもの
   browserSync({ // BrowserSyncライブラリを初期化するメソッドらしい
     server : {
         baseDir : './', // ルートとなるディレクトリを指定
@@ -72,3 +91,16 @@ const img = () => ( // "img"というgulpタスクを定義
 );
 
 export { img };
+
+
+// gulp-htmlhint（HTML構文チェック）関連---------------------------------------------
+import htmlhint from 'gulp-htmlhint'; // gulp-htmlhintのプラグインの読み込み
+
+const html = (done) => { // "html"というgulpタスクを定義
+  gulp.src('src/html/*.html') // 構文チェックするファイルを指定
+    .pipe(htmlhint('.htmlhintrc')) // htmlhintcの実行、設定内容は.htmlhintrcを参照する
+    .pipe(htmlhint.reporter()); // 実行した結果をターミナルに表示
+    done();
+};
+
+export { html };

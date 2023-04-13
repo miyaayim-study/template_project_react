@@ -1,8 +1,16 @@
 div {
+  background-color: green;
+  padding: 1rem;
+
   h1 {
     color: red;
+    height: 5rem;
+    width: auto;
+    transition: background-color 0.3s, color 0.3s;
   }
+
   p {
     color: blue;
   }
+
 }
