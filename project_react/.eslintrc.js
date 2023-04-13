@@ -14,14 +14,14 @@ module.exports = {
         "sourceType": "module"
     },
     "plugins": [
-        "react",
-        "react-hooks"
+        "react", // Reactのプラグイン
+        "react-hooks" // React Hooksのプラグイン
     ],
     "rules": {
     },
     "settings": {
         "react": {
-            "version": "18.2.0"
+            "version": "18.2.0" // 使用中のReactのバージョンを指定、これがないと動かない
         }
     }
 };

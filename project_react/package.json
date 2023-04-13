@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "webpack",
+    "gulp": "gulp",
+    "webpack": "webpack",
     "eslint": "eslint ./src/jsx/**/*.jsx",
-    "lint:css": "stylelint dist/style.css",
+    "stylelint": "stylelint ./dist/css/style.css",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

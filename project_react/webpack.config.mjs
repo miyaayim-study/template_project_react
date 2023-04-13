@@ -4,6 +4,10 @@ import ESLintPlugin from 'eslint-webpack-plugin'; // eslint-webpack-pluginをイ
 export default {
   mode: "development", // 開発モード（"development"）で動作するように設定（ソースマップ有効でJSファイルが出力される、本番環境では"production"に設定すると最適化された状態で出力される）
   entry: `./src/jsx/index.jsx`, // エントリーポイント（メインとなる処理を行うJavaScriptファイル）の指定
+  output: { // ファイルの出力設定
+    path: path.resolve("./dist/assets/js"), //  出力ファイルのディレクトリ名（Gulpのwebpack-streamでWebpack実行時は無効[Gulp側で設定]、Webpack単独のときに有効）
+    filename: "bundle.js", // 出力ファイル名
+  },
   module: {
     rules: [ // モジュールに対するルールを定義する
       {
@@ -26,10 +30,6 @@ export default {
     ]
   },
   target: ["web", "es5"], // ES5(IE11等)向けの指定（webpack 5以上で必要）
-  output: { // ファイルの出力設定
-    path: path.resolve("./dist"), //  出力ファイルのディレクトリ名
-    filename: "main.js", // 出力ファイル名
-  },
   resolve: { // モジュールを解決するためのオプション
     extensions: [".js", ".jsx", ".ts", ".tsx"]  // importやrequireで指定する際に、拡張子を省略できるようにする
   },

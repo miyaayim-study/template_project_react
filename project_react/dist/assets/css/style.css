@@ -6,6 +6,7 @@ div h1 {
   width: auto;
   height: 5rem;
   color: red;
+  -webkit-transition: background-color 0.3s, color 0.3s;
   transition: background-color 0.3s, color 0.3s;
 }
 div p {
