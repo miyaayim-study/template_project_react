@@ -1,108 +1,34 @@
+import { dir } from "./gulp/config.mjs"; // ファイルパス格納
 import gulp from 'gulp'; // gulpモジュールを読み込む
 
-// Sass 関連---------------------------------------------
-import gulpSass from "gulp-sass"; // gulp-sassパッケージのgulp-sassモジュールをインポートする
-import sassCompiler from "sass"; // sassパッケージに含まれるSassコンパイラ本体のsassモジュールをインポートする
-const sass = gulpSass(sassCompiler); // gulp-sassのコンストラクタ関数にsassコンパイラを渡して、コンパイラを使用するための定数sassを定義
+import html from "./gulp/task/html.mjs"; // HTML構文チェック & HTML複製 関連
+import compileSass from "./gulp/task/stylesheets.mjs"; // Sassコンパイル 関連
+import bundleWebpack from "./gulp/task/javascripts.mjs"; // webpack 関連
+import images from "./gulp/task/images.mjs"; // gulp-imagemin（画像圧縮） 関連
+import { server, reload } from "./gulp/task/sever.mjs"; // Browsersync 関連
 
-// postcss 関連
-import postcss from 'gulp-postcss'; // gulp-postcssパッケージをインポートする
-import autoprefixer from 'autoprefixer'; // Autoprefixer（ベンダープレフィックス自動付与）のパッケージをインポートする
-import stylelint from 'stylelint'; // stylelint（CSS構文チェック）パッケージをインポートする
-import postcssReporter from 'postcss-reporter'; // postcss-reporterパッケージをインポートする
-
-
-const compileSass = (done) => { // "compileSass"というgulpタスクを定義、 (done)はラストのdone()でタスク完了の合図を受け取るためのもの
-
-  gulp.src("src/sass/style.scss") // コンパイルするSassファイルを指定
-
-    .pipe(
-      sass({ // 定数sassを実行
-        outputStyle: "expanded" // 出力されるCSSの書式を"expanded"（展開形式）に設定する
-      })
-    )
-
-    .pipe(postcss([autoprefixer()])) // autoprefixerでベンダープレフィックス付与
-    .pipe(postcss([
-      stylelint({ // stylelintで構文チェック
-        configFile: ".stylelintrc.js", // .stylelintrc.jsファイルを参照
-        fix: true, // 生成するファイルのプロパティ順序を自動修正する
-      }),
-      postcssReporter({clearMessages: true}) // エラーメッセージ表示
-    ]))
-    
-    .pipe(gulp.dest("./dist/assets/css")) // 出力先ディレクトリを指定
-    done(); //done()でタスク完了の信号を出す
-};
-
-export { compileSass };
+// 実行テスト用コマンド作成
+export { html as htmlTest }; // HTML構文チェック & HTML複製 関連 
+export { compileSass as sassTest }; // Sassコンパイル 関連
+export { bundleWebpack as webpackTest }; // gulp-imagemin（画像圧縮） 関連
+export { images as imgTest }; // Browsersync 関連
 
 
-// webpack 関連---------------------------------------------
-import webpack from 'webpack';  // webpackのJavaScript APIを使用するためのライブラリ
-import webpackStream from 'webpack-stream';  // webpackをgulpで使用するためのプラグイン
-import webpackConfig from './webpack.config.mjs';  // webpackの設定ファイルの読み込み（さきほど作成したwebpack.config.jsのコンフィグ情報を読み込む）
-
-const bundleWebpack = (done) => { // "webpack"というgulpタスクを定義、 (done)はラストのdone()でタスク完了の合図を受け取るためのもの
-  webpackStream(webpackConfig, webpack) // webpackStreamを使用して、webpackを実行します。webpackConfigは設定ファイル、webpackはwebpackの実行ファイルを指定します。
-    .pipe(gulp.dest("./dist/assets/js")); // 出力先ディレクトリを指定して、バンドルしたJavaScriptファイルを出力
-    done(); //done()でタスク完了の信号を出す
-};
-
-export { bundleWebpack };
-
-
-// gulp-imagemin（画像圧縮） 関連---------------------------------------------
-import imagemin from 'gulp-imagemin'; // gulp-imageminのプラグインの読み込み
-
-const img = () => ( // "img"というgulpタスクを定義
-	gulp.src('src/images/**/*') // 圧縮するファイルを指定
-		.pipe(imagemin()) // インポートしたimageminを実行
-		.pipe(gulp.dest('dist/assets/images')) // 出力先ディレクトリを指定
-);
-
-export { img };
-
-
-// gulp-htmlhint（HTML構文チェック）&複製 関連---------------------------------------------
-import htmlhint from 'gulp-htmlhint'; // gulp-htmlhintのプラグインの読み込み
-
-const html = (done) => { // "html"というgulpタスクを定義
-  gulp.src('src/html/*.html') // 構文チェックするファイルを指定
-    .pipe(htmlhint('.htmlhintrc')) // htmlhintcの実行、設定内容は.htmlhintrcを参照する
-    .pipe(htmlhint.reporter()) // 実行した結果をターミナルに表示
-    .pipe(gulp.dest('./dist')) // 出力先ディレクトリを指定（ただの複製用）
-    done();
-};
-
-export { html };
-
-
-// Browsersync 関連---------------------------------------------
-import browserSync from 'browser-sync'; // browser-syncのプラグインの読み込み
-
-// リロード設定
-const browserReload = (done) => { // "browserReload"というgulpタスクを定義、 (done)はラストのdone()でタスク完了の合図を受け取るためのもの
-  browserSync.reload(); // 同期しているブラウザをリロード
-  done(); //done()でタスク完了の信号を出す
-};
-
-// Browsersync起動して監視
+// ファイル監視 & ブラウザリロード
 const watchFiles = (done) => { // "watchFiles"というgulpタスクを定義、 (done)はラストのdone()でタスク完了の合図を受け取るためのもの
-  browserSync({ // BrowserSyncライブラリを初期化するメソッドらしい
-    server : {
-        baseDir : './dist', // ルートとなるディレクトリを指定（これがないとCSSとJSがブラウザに反映されなかった）
-        index : 'index.html', // 読み込むHTMLファイル
-    },
-  });
-
+  
   // 監視設定（監視対象に変化があったら、指示されたタスクを実行）
-  gulp.watch("./src/html/*.html", html); // htmlファイルの監視 ＆ HTML構文チェック & HTML複製
-  gulp.watch("./src/sass/**/*.scss", compileSass); // scssファイルの監視 ＆ sassコンパイル & ベンダープレフィックス付与 & 構文チェック & プロパティ順序修正
-  gulp.watch("./src/jsx/**/*.jsx", bundleWebpack); // jsxファイルの監視 ＆ webpackバンドル & 構文チェック
-  gulp.watch(["./dist/*.html", "./dist/assets/css/*.css", "./dist/assets/js/*.js"], browserReload); // ファイルに変更があれば同期しているブラウザをリロード
+  gulp.watch(dir.src.html + "*.html", html); // htmlファイルの監視 ＆ HTML構文チェック & HTML複製
+  gulp.watch(dir.src.stylesheets + "**/*.scss", compileSass); // scssファイルの監視 ＆ sassコンパイル & ベンダープレフィックス付与 & 構文チェック & プロパティ順序修正
+  gulp.watch(dir.src.javascripts + "**/*.jsx", bundleWebpack); // jsxファイルの監視 ＆ webpackバンドル & 構文チェック
+  gulp.watch([dir.dest.html + "*.html", dir.dest.stylesheets + "*.css", dir.dest.javascripts + "*.js"], reload); // ファイルに変更があれば同期しているブラウザをリロード
 
   done(); //done()でタスク完了の信号を出す
 };
 
-export default watchFiles; // npx gulpというコマンドを実行した時、watchSassFilesが実行されるようにします
+// npx gulp
+export const run = gulp.parallel(html, compileSass, bundleWebpack, images); // npx gulp runでコマンドを実行とき、指定したタスクを同時に実行、`parallel`は並列実行のこと、実行するタスク同士が依存関係にない場合に有効。
+export default gulp.series(run, server, watchFiles); // npx gulpでコマンドを実行した時、指定したタスクを左から順番に実行、「ファイル生成 → ブラウザ開く → ファイル監視」の順番でタスク実行している。`series`は並列実行のこと、実行するタスク同士が依存関係にある場合に有効。
+
+// メモ
+// 「gulp --tasks」コマンドで実行可能なタスクが見れる

@@ -3,11 +3,14 @@ import ESLintPlugin from 'eslint-webpack-plugin'; // eslint-webpack-pluginをイ
 
 export default {
   mode: "development", // 開発モード（"development"）で動作するように設定（ソースマップ有効でJSファイルが出力される、本番環境では"production"に設定すると最適化された状態で出力される）
-  entry: `./src/jsx/index.jsx`, // エントリーポイント（メインとなる処理を行うJavaScriptファイル）の指定
-  output: { // ファイルの出力設定
-    path: path.resolve("./dist/assets/js"), //  出力ファイルのディレクトリ名（Gulpのwebpack-streamでWebpack実行時は無効[Gulp側で設定]、Webpack単独のときに有効）
-    filename: "bundle.js", // 出力ファイル名
-  },
+
+  // ※ `entry` と `output` は gulp側で指定しているのでので消してる。webpack単独で実行する際には復活させること。
+  // entry: `./src/assets/jsx/index.jsx`, // エントリーポイント（メインとなる処理を行うJavaScriptファイル）の指定
+  // output: { // ファイルの出力設定
+  //   path: path.resolve("./dist/assets/js"), //  出力ファイルのディレクトリ名
+  //   filename: "bundle.js", // 出力ファイル名
+  // },
+
   module: {
     rules: [ // モジュールに対するルールを定義する
       {
