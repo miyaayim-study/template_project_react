@@ -1,0 +1,16 @@
+div {
+  padding: 1rem;
+  background-color: green;
+
+  h1 {
+    width: auto;
+    height: 5rem;
+    color: red;
+    transition: background-color 0.3s, color 0.3s;
+  }
+
+  p {
+    color: blue;
+  }
+
+}

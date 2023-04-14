@@ -8,7 +8,7 @@ const server = (done) => { // "sever"というgulpタスクを定義、 (done)�
   browserSync({ // BrowserSyncライブラリを初期化するメソッドらしい
     server : {
       open: "external", // ローカルIPアドレスを使って外部デバイスからWebサイトを開ける
-      baseDir : dir.dest.root, // ルートとなるディレクトリを指定（これがないとCSSとJSがブラウザに反映されなかった）
+      baseDir : dir.dist.root, // ルートとなるディレクトリを指定（これがないとCSSとJSがブラウザに反映されなかった）
       index : 'index.html', // 読み込むHTMLファイル
     },
   });

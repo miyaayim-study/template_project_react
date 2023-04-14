@@ -1,6 +1,5 @@
 import { dir } from "../config.mjs"; // ファイルパス格納
 import gulp from 'gulp'; // gulpモジュールを読み込む
-import cached from 'gulp-cached'; // gulp-cachedモジュールを読み込む
 import plumber from "gulp-plumber"; // gulp-plumberモジュールを読み込む
 import notify from "gulp-notify"; // gulp-notifyモジュールを読み込む
 
@@ -27,7 +26,6 @@ const compileSass = (done) => { // "compileSass"というgulpタスクを定義�
       })
     }))
 
-    .pipe(cached(compileSass)) // gulp-cachedでファイルをキャッシュして、変更があるファイルのみ処理されるようにする
 
     .pipe(sass({ // 定数sassを実行
         outputStyle: "expanded" // 出力されるCSSの書式を"expanded"（展開形式）に設定する
@@ -46,7 +44,7 @@ const compileSass = (done) => { // "compileSass"というgulpタスクを定義�
       postcssReporter({clearMessages: true}) // エラーメッセージ表示
     ]))
 
-    .pipe(gulp.dest(dir.dest.stylesheets)) // 出力先ディレクトリを指定
+    .pipe(gulp.dest(dir.dist.stylesheets)) // 出力先ディレクトリを指定
     done(); //done()でタスク完了の信号を出す
 };
 

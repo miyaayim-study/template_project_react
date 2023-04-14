@@ -18,7 +18,7 @@ const bundleWebpack = (done) => { // "webpack"というgulpタスクを定義、
     )
     
     .pipe(webpackStream(webpackConfig, webpack))
-    .pipe(gulp.dest(dir.dest.javascripts)); // 出力先ディレクトリを指定して、バンドルしたJavaScriptファイルを出力
+    .pipe(gulp.dest(dir.dist.javascripts)); // 出力先ディレクトリを指定して、バンドルしたJavaScriptファイルを出力
     done(); //done()でタスク完了の信号を出す
 };
 

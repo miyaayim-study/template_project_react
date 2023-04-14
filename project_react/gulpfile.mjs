@@ -10,9 +10,10 @@ import { server, reload } from "./gulp/task/sever.mjs"; // Browsersync 関連
 // 実行テスト用コマンド作成
 export { html as htmlTest }; // HTML構文チェック & HTML複製 関連 
 export { compileSass as sassTest }; // Sassコンパイル 関連
-export { bundleWebpack as webpackTest }; // gulp-imagemin（画像圧縮） 関連
-export { images as imgTest }; // Browsersync 関連
+export { bundleWebpack as webpackTest }; // webpack 関連
 
+// gulp-imagemin（画像圧縮） 関連
+export {default as images } from "./gulp/task/images.mjs";
 
 // ファイル監視 & ブラウザリロード
 const watchFiles = (done) => { // "watchFiles"というgulpタスクを定義、 (done)はラストのdone()でタスク完了の合図を受け取るためのもの
@@ -21,7 +22,7 @@ const watchFiles = (done) => { // "watchFiles"というgulpタスクを定義、
   gulp.watch(dir.src.html + "*.html", html); // htmlファイルの監視 ＆ HTML構文チェック & HTML複製
   gulp.watch(dir.src.stylesheets + "**/*.scss", compileSass); // scssファイルの監視 ＆ sassコンパイル & ベンダープレフィックス付与 & 構文チェック & プロパティ順序修正
   gulp.watch(dir.src.javascripts + "**/*.jsx", bundleWebpack); // jsxファイルの監視 ＆ webpackバンドル & 構文チェック
-  gulp.watch([dir.dest.html + "*.html", dir.dest.stylesheets + "*.css", dir.dest.javascripts + "*.js"], reload); // ファイルに変更があれば同期しているブラウザをリロード
+  gulp.watch([dir.dist.html + "*.html", dir.dist.stylesheets + "*.css", dir.dist.javascripts + "*.js"], reload); // ファイルに変更があれば同期しているブラウザをリロード
 
   done(); //done()でタスク完了の信号を出す
 };

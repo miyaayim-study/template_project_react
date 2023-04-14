@@ -11,7 +11,7 @@ const html = (done) => { // "html"というgulpタスクを定義
     }))
     .pipe(htmlhint('.htmlhintrc')) // htmlhintcの実行、設定内容は.htmlhintrcを参照する
     .pipe(htmlhint.reporter()) // 実行した結果をターミナルに表示
-    .pipe(gulp.dest(dir.dest.html)) // 出力先ディレクトリを指定（ただの複製用）
+    .pipe(gulp.dest(dir.dist.html)) // 出力先ディレクトリを指定（ただの複製用）
     done();
 };
 

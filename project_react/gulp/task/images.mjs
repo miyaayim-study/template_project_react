@@ -5,7 +5,7 @@ import imagemin from 'gulp-imagemin'; // gulp-imageminのプラグインの読�
 const images = (done) => { // "images"というgulpタスクを定義 、(done)はラストのdone()でタスク完了の合図を受け取るためのもの
 	gulp.src(dir.src.images + '**/*') // 圧縮するファイルを指定
 		.pipe(imagemin()) // インポートしたimageminを実行
-		.pipe(gulp.dest(dir.dest.images)) // 出力先ディレクトリを指定
+		.pipe(gulp.dest(dir.dist.images)) // 出力先ディレクトリを指定
 		done(); //done()でタスク完了の信号を出す
 };
 

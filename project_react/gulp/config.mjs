@@ -6,7 +6,7 @@ export const dir = {
 		javascripts: "src/assets/jsx/",
 		images: "src/assets/images/",
 	},
-	dest: {
+	dist: {
 		root: "dist/",
 		html: "dist/",
 		stylesheets: "dist/assets/css/",
